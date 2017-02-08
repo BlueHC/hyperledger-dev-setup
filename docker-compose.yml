@@ -2,11 +2,17 @@ membersrvc:
   # try 'docker ps' to see the container status after starting this compose
   container_name: membersrvc
   image: hyperledger/fabric-membersrvc
+  ports:
+    - "7054:7054"
   command: membersrvc
 
 peer:
   container_name: peer
   image: hyperledger/fabric-peer
+  ports:
+    - "7050:7050"
+    - "7051:7051"
+    - "7053:7053"
   environment:
     - CORE_PEER_ADDRESSAUTODETECT=true
     - CORE_VM_ENDPOINT=unix:///var/run/docker.sock
