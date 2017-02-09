@@ -80,7 +80,9 @@ Attaching to membersrvc, peer, starter
 
 ## Deploy your first chaincode
 
-Change to sample code directory and register the chaincode via CLI
+Fork a copy of learn-chaincode from https://github.com/IBM-Blockchain/learn-chaincode
+
+Change into sample code directory and register the chaincode via CLI
 ```
 $ cd learn-chaincode/start
 $ CORE_CHAINCODE_ID_NAME=myfirstchaincode CORE_PEER_ADDRESS=0.0.0.0:7051 ./start
