@@ -78,7 +78,7 @@ Starting starter
 Attaching to membersrvc, peer, starter
 ```
 
-## Deploy your first chaincode
+## Deploy your first chaincode to your local docker hyperledger fabric
 
 Fork a copy of learn-chaincode from https://github.com/IBM-Blockchain/learn-chaincode
 
@@ -100,6 +100,8 @@ POST localhost:7050/registrar
 
 ### Deploy (init) chaincode (REST)
 ```
+POST localhost:7050/chaincode
+
 {
   "jsonrpc": "2.0",
   "method": "deploy",
@@ -119,6 +121,8 @@ POST localhost:7050/registrar
 
 ### Invoke chaincode / Write (REST)
 ```
+POST localhost:7050/chaincode
+
 {
   "jsonrpc": "2.0",
   "method": "invoke",
@@ -138,6 +142,8 @@ POST localhost:7050/registrar
 
 ### Query chaincode / Read (REST)
 ```
+GET localhost:7050/chaincode
+
 {
   "jsonrpc": "2.0",
   "method": "query",
@@ -152,5 +158,90 @@ POST localhost:7050/registrar
       "secureContext": "jim"
   },
   "id": 5
+}
+```
+
+## Deploy your first chaincode to Bluemix
+
+- Add the Blockchain service to your Bluemix account: https://console.eu-gb.bluemix.net/catalog/services/blockchain/
+- Open the Blockchain Dashboard
+- Copy one of the peer URLs and use it as PEER_URL in the upcoming snippets
+- Check the Service Credentials at the bottom right on the Network page and copy credentials from one user, use it as MY_CREDENTIALS
+
+### Login with a demo user (REST)
+```
+POST https://[PEER_URL]/registrar
+
+{
+  "enrollId": "user_type1_2",
+  "enrollSecret": "[MY_CREDENTIALS]"
+}
+```
+
+### Deploy (init) chaincode (REST)
+```
+POST https://[PEER_URL]/chaincode
+
+{
+     "jsonrpc": "2.0",
+     "method": "deploy",
+     "params": {
+         "type": 1,
+         "chaincodeID": {
+           "path": "https://github.com/BlueHC/hyperledger-learn-chaincode/finished"
+         },
+         "ctorMsg": {
+             "function": "init",
+             "args": [
+                 "Welcome to our Hyperledger Genesis Session @ BlueHC!"
+             ]
+         },
+         "secureContext": "user_type1_2"
+     },
+     "id": 5
+ }
+```
+
+Remember chaincode id from response for placeholder CC_ID.
+
+### Invoke chaincode / Write (REST)
+```
+POST https://[PEER_URL]/chaincode
+
+{
+  "jsonrpc": "2.0",
+  "method": "invoke",
+  "params": {
+      "type": 1,
+      "chaincodeID":{
+          "name":"[CC_ID]"
+      },
+      "CtorMsg": {
+      	"args":["write", "item0", "blob123"]
+      },
+      "secureContext": "user_type1_2"
+  },
+  "id": 1
+}
+```
+
+### Query chaincode / Read (REST)
+```
+GET https://[PEER_URL]/chaincode
+
+{
+  "jsonrpc": "2.0",
+  "method": "query",
+  "params": {
+      "type": 1,
+      "chaincodeID":{
+          "name":"[CC_ID]"
+      },
+      "CtorMsg": {
+      	"args":["read", "hello_world"]
+      },
+      "secureContext": "user_type1_2"
+  },
+  "id": 1
 }
 ```
